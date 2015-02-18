@@ -1,14 +1,7 @@
-/*
- * user_ws2801.h
- *
- *  Created on: Nov 18, 2014
- *      Author: frans-willem
- */
+#ifndef _WS2801_H_
+#define _WS2801_H_
 
-#ifndef USER_WS2801_H_
-#define USER_WS2801_H_
+void ICACHE_FLASH_ATTR ws2801_init();
+void ICACHE_FLASH_ATTR ws2801_strip(uint8_t * data, uint16_t len);
 
-void ws2801_init();
-void ws2801_strip(uint8_t *data, uint16_t len);
-
-#endif /* USER_WS2801_H_ */
+#endif

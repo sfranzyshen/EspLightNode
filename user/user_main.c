@@ -6,7 +6,6 @@
  */
 
 
-#include <input_protocols/tpm2net.h>
 #include "ets_sys.h"
 #include "osapi.h"
 #include "gpio.h"
@@ -15,10 +14,27 @@
 #include "user_interface.h"
 #include "espconn.h"
 #include "mem.h"
-#include "output_protocols/ws2801.h"
+
+#if defined(ENABLE_WS2812) && defined(ENABLE_LPD6803)
+#error "you can not enable both WS2812 and LPD6803 support."
+#endif
+
+#if defined(ENABLE_WS2812)
 #include "output_protocols/ws2812.h"
+#elif defined(ENABLE_LPD6803)
+#include "output_protocols/lpd6803.h"
+#else
+#include "output_protocols/ws2801.h"
+#endif
+
+#ifdef ENABLE_ARTNET
 #include "input_protocols/artnet.h"
+#endif
+
+#ifdef ENABLE_TPM2
 #include "input_protocols/tpm2net.h"
+#endif
+
 #include "config/httpd.h"
 #include "config/config.h"
 
@@ -84,11 +100,15 @@ user_init()
 
 	wifi_station_set_config(&stconf);
 	wifi_station_set_auto_connect(1);
-#ifdef ENABLE_WS2812
+
+#if defined(ENABLE_WS2812)
 	ws2812_init();
+#elif defined(ENABLE_LPD6803)
+	lpd6803_init();
 #else
 	ws2801_init();
 #endif
+
     //Wait for system to be done.
     system_init_done_cb(&system_is_done);
     //system_os_task()
